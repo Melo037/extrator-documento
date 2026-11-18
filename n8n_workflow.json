@@ -1,0 +1,81 @@
+{
+  "name": "Extrator de Documentos (FastAPI + Pydantic)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "extrator-pdf",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook (Recebe PDF)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/api/v1/extrair",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "tipo_documento",
+              "value": "={{ $json.body.tipo_documento || 'nota_fiscal' }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "arquivo",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2",
+      "name": "FastAPI - Extrator Pydantic",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "3",
+      "name": "Retorna JSON Validado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [760, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (Recebe PDF)": {
+      "main": [
+        [
+          {
+            "node": "FastAPI - Extrator Pydantic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FastAPI - Extrator Pydantic": {
+      "main": [
+        [
+          {
+            "node": "Retorna JSON Validado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

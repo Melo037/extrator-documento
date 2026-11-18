@@ -1,0 +1,26 @@
+[project]
+name = "extrator-documentos"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "joao", email = "victorplaymelo09@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.164.0",
+    "httpx>=0.28.1",
+    "openai>=3.55.1",
+    "pydantic>=2.14.3",
+    "pymupdf>=2.1",
+    "pytest>=9.2.0",
+    "python-multipart>=0.0.34",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+extrator-documentos = "extrator_documentos:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
